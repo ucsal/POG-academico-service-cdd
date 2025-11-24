@@ -1,0 +1,59 @@
+version: "3.9"
+
+services:
+
+  postgres:
+    image: postgres:15
+    container_name: postgres
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: academico
+    ports:
+      - "5432:5432"
+    networks:
+      - net
+
+  eureka-server:
+    image: eurekaserver:latest
+    container_name: eureka-server
+    build:
+      context: ./eureka-server
+    ports:
+      - "8761:8761"
+    networks:
+      - net
+
+  config-server:
+    image: configserver:latest
+    container_name: config-server
+    build:
+      context: ./config-server
+    environment:
+      SPRING_PROFILES_ACTIVE: native
+    ports:
+      - "8888:8888"
+    networks:
+      - net
+    depends_on:
+      - eureka-server
+
+  disciplina-service:
+    container_name: disciplina-service
+    build:
+      context: .
+    environment:
+      SPRING_PROFILES_ACTIVE: dev
+    depends_on:
+      - postgres
+      - config-server
+      - eureka-server
+    ports:
+      - "8081:8081"
+    networks:
+      - net
+
+networks:
+  net:
+    driver: bridge
