@@ -1,15 +1,25 @@
 package com.ucsal.disciplina_microsservice.model.entity;
 
-import jakarta.persistence.Entity;
+import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Table(name = "escolas")
 public class Escola {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private String nome;
-    private String sigla;
-    private boolean ativo = true;
+
+    private String professoresIds;
+
+    private String cursosIds;
 }
+
