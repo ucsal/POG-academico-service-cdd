@@ -1,33 +1,22 @@
 server:
-  port: 8081
+  port: ${ENV_SERVER_PORT:8081}
 
 spring:
   application:
-    name: disciplina-service
+    name: academico-service
 
-  datasource:
-    url: jdbc:postgresql://localhost:5432/academico
-    username: postgres
-    password: postgres
-    driver-class-name: org.postgresql.Driver
+  profiles:
+    active: ${ENV_SPRING_PROFILES_ACTIVE:dev}
 
   jpa:
     hibernate:
       ddl-auto: update
     properties:
       hibernate:
-        format_sql: true
-    show-sql: true
+        format_sql: false
+    show-sql: false
 
   config:
-    import: "optional:configserver:"
+    import: "optional:configserver:${ENV_CONFIG_SERVER_URL:http://config-server:8888}"
 
-eureka:
-  client:
-    enabled: false
 
-management:
-  endpoints:
-    web:
-      exposure:
-        include: "*"
